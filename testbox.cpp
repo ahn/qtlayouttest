@@ -135,7 +135,7 @@ void TestBox::initStretchWidget() {
     for (int i=0; i<=5; ++i) {
         stretch->addItem(tr("%1").arg(i), i);
     }
-    cont->layout()->addWidget(new QLabel("Stretch (HBoxLayout only)"));
+    cont->layout()->addWidget(new QLabel("Stretch (QBoxLayout only)"));
     cont->layout()->addWidget(stretch);
     layout()->addWidget(cont);
 
