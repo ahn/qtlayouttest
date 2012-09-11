@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-TARGET = lala
+TARGET = qtlayouttest
 TEMPLATE = app
 
 
