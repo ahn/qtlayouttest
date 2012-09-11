@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "juttu.h"
 
 #include <QPushButton>
 #include <QLayout>
@@ -11,30 +10,31 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    rb1(new QRadioButton(tr("QHBoxLayout"))),
-    rb2(new QRadioButton(tr("QVBoxLayout"))),
-    rb3(new QRadioButton(tr("QGridLayout"))),
-    lawi(0),
-    j1(new Juttu(tr("yellow"))),
-    j2(new Juttu(tr("white"))),
-    j3(new Juttu(tr("orange"))),
-    j4(new Juttu(tr("cyan")))
+    rbHoriz(new QRadioButton(tr("QHBoxLayout"))),
+    rbVert(new QRadioButton(tr("QVBoxLayout"))),
+    rbGrid(new QRadioButton(tr("QGridLayout"))),
+    testBoxContainer(0),
+    tb1(new TestBox(tr("white"))),
+    tb2(new TestBox(tr("yellow"))),
+    tb3(new TestBox(tr("orange")))
 {
     ui->setupUi(this);
 
-    ui->w1->setLayout(new QHBoxLayout());
-    ui->w1->layout()->addWidget(rb1);
-    ui->w1->layout()->addWidget(rb2);
-    ui->w1->layout()->addWidget(rb3);
+    ui->layoutSelectWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    ui->layoutSelectWidget->setLayout(new QHBoxLayout());
+    ui->layoutSelectWidget->layout()->addWidget(new QLabel(tr("Layout: ")));
+    ui->layoutSelectWidget->layout()->addWidget(rbHoriz);
+    ui->layoutSelectWidget->layout()->addWidget(rbVert);
+    ui->layoutSelectWidget->layout()->addWidget(rbGrid);
 
-    connect(rb1, SIGNAL(toggled(bool)), this, SLOT(tog(bool)));
-    connect(rb2, SIGNAL(toggled(bool)), this, SLOT(tog(bool)));
-    connect(rb3, SIGNAL(toggled(bool)), this, SLOT(tog(bool)));
+    connect(rbHoriz, SIGNAL(toggled(bool)), this, SLOT(changeLayout(bool)));
+    connect(rbVert, SIGNAL(toggled(bool)), this, SLOT(changeLayout(bool)));
+    connect(rbGrid, SIGNAL(toggled(bool)), this, SLOT(changeLayout(bool)));
 
-    ui->w2->setLayout(new QVBoxLayout());
-    ui->w2->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    ui->mainArea->setLayout(new QVBoxLayout());
+    ui->mainArea->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 
-    rb1->toggle();
+    rbHoriz->toggle();
 }
 
 MainWindow::~MainWindow()
@@ -44,53 +44,53 @@ MainWindow::~MainWindow()
 
 void MainWindow::draw(QLayout* layout)
 {
-    if (lawi) {
-        j1->setParent(0);
-        j2->setParent(0);
-        j3->setParent(0);
-        delete lawi;
+    if (testBoxContainer) {
+        tb1->setParent(0);
+        tb2->setParent(0);
+        tb3->setParent(0);
+        delete testBoxContainer;
     }
 
-    lawi = new QWidget();
+    testBoxContainer = new QWidget();
 
     if (layout->inherits("QGridLayout")) {
         QGridLayout* grid = qobject_cast<QGridLayout*>(layout);
-        grid->addWidget(j1, 0, 0);
-        grid->addWidget(j2, 0, 1);
-        grid->addWidget(j3, 1, 0, 1, 2);
+        grid->addWidget(tb1, 0, 0);
+        grid->addWidget(tb2, 0, 1);
+        grid->addWidget(tb3, 1, 0, 1, 2);
     }
     else if (layout->inherits("QBoxLayout")) {
         QBoxLayout* box = qobject_cast<QBoxLayout*>(layout);
-        box->addWidget(j1);
-        box->addWidget(j2);
-        box->addWidget(j3);
+        box->addWidget(tb1);
+        box->addWidget(tb2);
+        box->addWidget(tb3);
     }
     else {
         Q_ASSERT(false);
     }
 
-    lawi->setLayout(layout);
+    testBoxContainer->setLayout(layout);
 
-    ui->w2->layout()->addWidget(lawi);
+    ui->mainArea->layout()->addWidget(testBoxContainer);
 
-    j1->updateStretch();
-    j2->updateStretch();
-    j3->updateStretch();
+    tb1->updateStretch();
+    tb2->updateStretch();
+    tb3->updateStretch();
 }
 
-void MainWindow::tog(bool on)
+void MainWindow::changeLayout(bool on)
 {
     if (!on) {
         return;
     }
 
-    if (rb1->isChecked()) {
+    if (rbHoriz->isChecked()) {
         draw(new QHBoxLayout());
     }
-    else if (rb2->isChecked()) {
+    else if (rbVert->isChecked()) {
         draw(new QVBoxLayout());
     }
-    else if (rb3->isChecked()) {
+    else if (rbGrid->isChecked()) {
         draw(new QGridLayout());
     }
 }

@@ -1,11 +1,13 @@
-#include "juttu.h"
+#include "testbox.h"
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QDebug>
 
 
-Juttu::Juttu(QString background) :
+TestBox::TestBox(QString background) :
     QGroupBox(),
+    sizeLabel(new QLabel()),
+    minSizeLabel(new QLabel()),
     policy(new QComboBox()),
     sliderH(new QSlider(Qt::Horizontal)),
     sliderV(new QSlider(Qt::Horizontal)),
@@ -18,45 +20,58 @@ Juttu::Juttu(QString background) :
     QLayout* la = new QVBoxLayout();
     setLayout(la);
 
+    initSizeLabel();
     initPolicyWidget();
-
     initHintWidget();
-
     initStretchWidget();
-
-    QPushButton* resizeButton = new QPushButton("Resize to SizeHint");
-    connect(resizeButton, SIGNAL(clicked()), this, SLOT(resizeClicked()));
-    layout()->addWidget(resizeButton);
-
-
 
     connect(sliderH, SIGNAL(valueChanged(int)), this, SLOT(sliderMoved(int)));
     connect(sliderV, SIGNAL(valueChanged(int)), this, SLOT(sliderMoved(int)));
 
     sliderH->setValue(200);
-    sliderV->setValue(100);
+    sliderV->setValue(200);
 }
 
-QSize Juttu::sizeHint() const
+QSize TestBox::sizeHint() const
 {
-    //return QGroupBox::sizeHint();
     return QSize(sliderH->value(), sliderV->value());
 }
 
-void Juttu::updateStretch()
+void TestBox::updateStretch()
 {
     stretchRequested(stretch->currentIndex());
     stretch->setEnabled(qobject_cast<QWidget*>(parent())->layout()->inherits("QBoxLayout"));
 }
 
-void Juttu::initPolicyWidget() {
-    QWidget* sp = new QWidget();
-    sp->setLayout(new QVBoxLayout());
-    sp->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+void TestBox::resizeEvent(QResizeEvent* event)
+{
+    QGroupBox::resizeEvent(event);
+    int w = size().width();
+    int h = size().height();
+    sizeLabel->setText(tr("Current size: %1 x %2").arg(w).arg(h));
+    int minW = minimumSizeHint().width();
+    int minH = minimumSizeHint().height();
+    minSizeLabel->setText(tr("Minimum size hint: %1 x %2").arg(minW).arg(minH));
+}
 
-    layout()->addWidget(sp);
+void TestBox::initSizeLabel()
+{
+    QWidget* cont = new QWidget();
+    cont->setLayout(new QVBoxLayout());
+    cont->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    cont->layout()->addWidget(sizeLabel);
+    cont->layout()->addWidget(minSizeLabel);
+    layout()->addWidget(cont);
+}
 
-    sp->layout()->addWidget(new QLabel(tr("Size Policy:")));
+void TestBox::initPolicyWidget() {
+    QWidget* cont = new QWidget();
+    cont->setLayout(new QVBoxLayout());
+    cont->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+
+    layout()->addWidget(cont);
+
+    cont->layout()->addWidget(new QLabel(tr("Size Policy:")));
 
     policy->addItem(tr("Preferred"),
                     QSizePolicy(QSizePolicy::Preferred,
@@ -86,68 +101,61 @@ void Juttu::initPolicyWidget() {
                     QSizePolicy(QSizePolicy::Ignored,
                                 QSizePolicy::Ignored));
 
-    sp->layout()->addWidget(policy);
+    cont->layout()->addWidget(policy);
 
     connect(policy, SIGNAL(activated(int)), this, SLOT(policyActivated(int)));
 }
 
-void Juttu::initHintWidget()
+void TestBox::initHintWidget()
 {
-    QWidget* sp = new QWidget();
-    sp->setLayout(new QVBoxLayout());
-    sp->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    QWidget* cont = new QWidget();
+    cont->setLayout(new QVBoxLayout());
+    cont->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    layout()->addWidget(sp);
+    layout()->addWidget(cont);
 
-    sp->layout()->addWidget(new QLabel(tr("Horizontal Size Hint:")));
-    sp->layout()->addWidget(sizeH);
+    cont->layout()->addWidget(new QLabel(tr("Horizontal Size Hint:")));
+    cont->layout()->addWidget(sizeH);
 
-    sliderH->setRange(0, 400);
-    sp->layout()->addWidget(sliderH);
+    sliderH->setRange(0, 500);
+    cont->layout()->addWidget(sliderH);
 
-    sp->layout()->addWidget(new QLabel(tr("Vertical Size Hint:")));
-    sp->layout()->addWidget(sizeV);
+    cont->layout()->addWidget(new QLabel(tr("Vertical Size Hint:")));
+    cont->layout()->addWidget(sizeV);
 
-    sliderV->setRange(0, 400);
-    sp->layout()->addWidget(sliderV);
+    sliderV->setRange(0, 500);
+    cont->layout()->addWidget(sliderV);
 }
 
-void Juttu::initStretchWidget() {
-    QWidget* sp = new QWidget();
-    sp->setLayout(new QVBoxLayout());
-    sp->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+void TestBox::initStretchWidget() {
+    QWidget* cont = new QWidget();
+    cont->setLayout(new QVBoxLayout());
+    cont->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
     for (int i=0; i<=5; ++i) {
         stretch->addItem(tr("%1").arg(i), i);
     }
-    sp->layout()->addWidget(new QLabel("Stretch (HBoxLayout only)"));
-    sp->layout()->addWidget(stretch);
-    layout()->addWidget(sp);
+    cont->layout()->addWidget(new QLabel("Stretch (HBoxLayout only)"));
+    cont->layout()->addWidget(stretch);
+    layout()->addWidget(cont);
 
     connect(stretch, SIGNAL(activated(int)), this, SLOT(stretchRequested(int)));
 }
 
-void Juttu::policyActivated(int i)
+void TestBox::policyActivated(int i)
 {
    QSizePolicy po = policy->itemData(i).value<QSizePolicy>();
    setSizePolicy(po);
 }
 
-void Juttu::sliderMoved(int)
+void TestBox::sliderMoved(int)
 {
     sizeH->setText(QString("%1").arg(sliderH->value()));
     sizeV->setText(QString("%1").arg(sliderV->value()));
     updateGeometry();
 }
 
-void Juttu::resizeClicked()
-{
-    int x = sliderH->value() ? sliderH->value() : 1;
-    int y = sliderV->value() ? sliderV->value() : 1;
-    resize(x, y);
-}
-
-void Juttu::stretchRequested(int i) {
+void TestBox::stretchRequested(int i) {
     int val = stretch->itemData(i).value<int>();
 
     QObject* pa = parent();
@@ -165,3 +173,5 @@ void Juttu::stretchRequested(int i) {
         grid->setColumnStretch(col, val);
     }*/
 }
+
+

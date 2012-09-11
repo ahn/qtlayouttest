@@ -12,9 +12,9 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    juttu.cpp
+    testbox.cpp
 
 HEADERS  += mainwindow.h \
-    juttu.h
+    testbox.h
 
 FORMS    += mainwindow.ui

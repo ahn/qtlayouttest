@@ -5,7 +5,7 @@
 #include <QRadioButton>
 #include <QCheckBox>
 
-#include "juttu.h"
+#include "testbox.h"
 
 namespace Ui {
 class MainWindow;
@@ -24,21 +24,20 @@ private:
 
     Ui::MainWindow *ui;
 
-    QRadioButton* rb1;
-    QRadioButton* rb2;
-    QRadioButton* rb3;
+    QRadioButton* rbHoriz;
+    QRadioButton* rbVert;
+    QRadioButton* rbGrid;
 
-    QWidget* lawi;
+    QWidget* testBoxContainer;
 
-    Juttu* j1;
-    Juttu* j2;
-    Juttu* j3;
-    Juttu* j4;
+    TestBox* tb1;
+    TestBox* tb2;
+    TestBox* tb3;
 
 
 
 private slots:
-    void tog(bool on);
+    void changeLayout(bool on);
 };
 
 #endif // MAINWINDOW_H

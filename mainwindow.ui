@@ -16,10 +16,10 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QWidget" name="w1" native="true"/>
+     <widget class="QWidget" name="layoutSelectWidget" native="true"/>
     </item>
     <item>
-     <widget class="QWidget" name="w2" native="true"/>
+     <widget class="QWidget" name="mainArea" native="true"/>
     </item>
    </layout>
   </widget>
