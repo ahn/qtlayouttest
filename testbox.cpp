@@ -15,7 +15,7 @@ TestBox::TestBox(QString background) :
     sizeV(new QLabel()),
     stretch(new QComboBox())
 {
-    setStyleSheet(tr("QGroupBox { border: 2px solid black; background: %1; }").arg(background));
+    setStyleSheet(QString("QGroupBox { border: 2px solid black; background: %1; }").arg(background));
 
     QLayout* la = new QVBoxLayout();
     setLayout(la);
@@ -48,10 +48,10 @@ void TestBox::resizeEvent(QResizeEvent* event)
     QGroupBox::resizeEvent(event);
     int w = size().width();
     int h = size().height();
-    sizeLabel->setText(tr("Current size: %1 x %2").arg(w).arg(h));
+    sizeLabel->setText(QString("Current size: %1 x %2").arg(w).arg(h));
     int minW = minimumSizeHint().width();
     int minH = minimumSizeHint().height();
-    minSizeLabel->setText(tr("Minimum size hint: %1 x %2").arg(minW).arg(minH));
+    minSizeLabel->setText(QString("Minimum size hint: %1 x %2").arg(minW).arg(minH));
 }
 
 void TestBox::initSizeLabel()
@@ -71,33 +71,33 @@ void TestBox::initPolicyWidget() {
 
     layout()->addWidget(cont);
 
-    cont->layout()->addWidget(new QLabel(tr("Size Policy:")));
+    cont->layout()->addWidget(new QLabel("Size Policy:"));
 
-    policy->addItem(tr("Preferred"),
+    policy->addItem("Preferred",
                     QSizePolicy(QSizePolicy::Preferred,
                                 QSizePolicy::Preferred));
 
-    policy->addItem(tr("Fixed"),
+    policy->addItem("Fixed",
                     QSizePolicy(QSizePolicy::Fixed,
                                 QSizePolicy::Fixed));
 
-    policy->addItem(tr("Minimum"),
+    policy->addItem("Minimum",
                     QSizePolicy(QSizePolicy::Minimum,
                                 QSizePolicy::Minimum));
 
-    policy->addItem(tr("Maximum"),
+    policy->addItem("Maximum",
                     QSizePolicy(QSizePolicy::Maximum,
                                 QSizePolicy::Maximum));
 
-    policy->addItem(tr("Expanding"),
+    policy->addItem("Expanding",
                     QSizePolicy(QSizePolicy::Expanding,
                                 QSizePolicy::Expanding));
 
-    policy->addItem(tr("MinimumExpanding"),
+    policy->addItem("MinimumExpanding",
                     QSizePolicy(QSizePolicy::MinimumExpanding,
                                 QSizePolicy::MinimumExpanding));
 
-    policy->addItem(tr("Ignored"),
+    policy->addItem("Ignored",
                     QSizePolicy(QSizePolicy::Ignored,
                                 QSizePolicy::Ignored));
 
@@ -114,13 +114,13 @@ void TestBox::initHintWidget()
 
     layout()->addWidget(cont);
 
-    cont->layout()->addWidget(new QLabel(tr("Horizontal Size Hint:")));
+    cont->layout()->addWidget(new QLabel("Horizontal Size Hint:"));
     cont->layout()->addWidget(sizeH);
 
     sliderH->setRange(0, 500);
     cont->layout()->addWidget(sliderH);
 
-    cont->layout()->addWidget(new QLabel(tr("Vertical Size Hint:")));
+    cont->layout()->addWidget(new QLabel("Vertical Size Hint:"));
     cont->layout()->addWidget(sizeV);
 
     sliderV->setRange(0, 500);
@@ -133,7 +133,7 @@ void TestBox::initStretchWidget() {
     cont->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
     for (int i=0; i<=5; ++i) {
-        stretch->addItem(tr("%1").arg(i), i);
+        stretch->addItem(QString("%1").arg(i), i);
     }
     cont->layout()->addWidget(new QLabel("Stretch (QBoxLayout only)"));
     cont->layout()->addWidget(stretch);

@@ -10,19 +10,19 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    rbHoriz(new QRadioButton(tr("QHBoxLayout"))),
-    rbVert(new QRadioButton(tr("QVBoxLayout"))),
-    rbGrid(new QRadioButton(tr("QGridLayout"))),
+    rbHoriz(new QRadioButton("QHBoxLayout")),
+    rbVert(new QRadioButton("QVBoxLayout")),
+    rbGrid(new QRadioButton("QGridLayout")),
     testBoxContainer(0),
-    tb1(new TestBox(tr("white"))),
-    tb2(new TestBox(tr("yellow"))),
-    tb3(new TestBox(tr("orange")))
+    tb1(new TestBox("white")),
+    tb2(new TestBox("yellow")),
+    tb3(new TestBox("orange"))
 {
     ui->setupUi(this);
 
     ui->layoutSelectWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     ui->layoutSelectWidget->setLayout(new QHBoxLayout());
-    ui->layoutSelectWidget->layout()->addWidget(new QLabel(tr("Layout: ")));
+    ui->layoutSelectWidget->layout()->addWidget(new QLabel("Layout: "));
     ui->layoutSelectWidget->layout()->addWidget(rbHoriz);
     ui->layoutSelectWidget->layout()->addWidget(rbVert);
     ui->layoutSelectWidget->layout()->addWidget(rbGrid);
