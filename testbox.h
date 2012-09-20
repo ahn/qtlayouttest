@@ -1,5 +1,5 @@
-#ifndef JUTTU_H
-#define JUTTU_H
+#ifndef TESTBOX_H
+#define TESTBOX_H
 
 #include <QGroupBox>
 #include <QCheckBox>
@@ -44,4 +44,4 @@ private:
     QComboBox* stretch;
 };
 
-#endif // JUTTU_H
+#endif // TESTBOX_H
