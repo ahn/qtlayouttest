@@ -1,2 +1,2 @@
-qtlayouttest
-============
+qt layout test
+==============
